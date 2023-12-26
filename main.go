@@ -11,6 +11,7 @@ import (
 	"zadanie/internal/config"
 	"zadanie/internal/server"
 	"zadanie/internal/server/router"
+	"zadanie/internal/storage/storage_mock"
 	"zadanie/pkg/zaplogger"
 
 	"github.com/oklog/run"
@@ -34,6 +35,8 @@ func main() {
 	}
 	defer zapLoggerCleanup()
 
+	storage := storage_mock.NewStorageMock()
+
 	application := app.NewApp(storage)
 
 	handler := router.NewHandler(application)
@@ -56,7 +59,31 @@ func main() {
 
 	}, func(error) {
 		interruptionChannel <- syscall.SIGINT
-
 	})
+
+	serviceGroup.Add(func() error {
+
+		logger.Info("application", zap.String("event", "Application logic started"))
+		return application.Run()
+
+	}, func(error) {
+
+		err = application.Shutdown()
+		logger.Info("application", zap.String("event", "Application logic shutdown"))
+	})
+
+	serviceGroup.Add(func() error {
+
+		logger.Info("application", zap.String("event", "Http API started"))
+		return server.Run()
+
+	}, func(error) {
+
+		err = server.Shutdown()
+		logger.Info("application", zap.String("event", "Http API shutdown"))
+	})
+
+	err = serviceGroup.Run()
+	logger.Info("services stopped", zap.Error(err))
 
 }
