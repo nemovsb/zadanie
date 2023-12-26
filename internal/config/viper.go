@@ -16,8 +16,8 @@ import (
 )
 
 const (
-	ENV_PROD = "Prod"
-	ENV_DEV  = "Dev"
+	ENV_PROD = "prod"
+	ENV_DEV  = "dev"
 )
 
 var ErrUnmarshalConfig = errors.New("viper failed to unmarshal app config")

@@ -38,7 +38,7 @@ COMPOSE_PULL_CMD=${COMPOSE_CMD} pull
 
 ## compose-up: raise the whole project from docker-compose.yml 
 .PHONY: compose-up
-compose-up: test build-for-alpine
+compose-up: build-for-alpine
 	@echo "> Raise the whole project from docker-compose.yml..."
 	${COMPOSEPULL_CMD}
 	${COMPOSE_CMD} up --build --detach
@@ -48,5 +48,5 @@ compose-up: test build-for-alpine
 .PHONY: compose-down
 compose-down:
 	@echo "> Destroying everything raised from docker-compose.local.yml..."
-	${COMPOSE_LOCAL_CMD} down --remove-orphans
+	${COMPOSE_CMD} down --remove-orphans
 	@echo "> Everything destroyed"
