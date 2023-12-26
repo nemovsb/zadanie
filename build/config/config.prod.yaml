@@ -1,0 +1,8 @@
+server:
+  port: 8088
+
+storage:
+  host: "postgres"
+  port: "5432"
+  username: "backend_user"
+  db_name: "warehouses"
