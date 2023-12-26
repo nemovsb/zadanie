@@ -28,7 +28,7 @@ func NewRouter(h *Handler, mode string) (router *gin.Engine) {
 	goods.POST("/release", h.releaseGoods)
 
 	warehouse := router.Group("/warehouse")
-	warehouse.GET("/goods", h.getRemainGoods)
+	warehouse.GET(":id/goods", h.getRemainGoods)
 
 	return router
 }
