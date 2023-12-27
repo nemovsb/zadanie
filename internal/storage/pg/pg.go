@@ -59,7 +59,7 @@ func NewPostgres(config *Config) (*Postgres, error) {
 	return &Postgres{db: db}, nil
 }
 
-func (pg *Postgres) ReserveGoods(goodsIDs []string) error {
+func (pg *Postgres) ReserveGoods(goodsIDs []int64) (string, error) {
 	reserveID := uuid.NewV4().String()
 
 	tx := pg.db.Begin()
@@ -70,7 +70,7 @@ func (pg *Postgres) ReserveGoods(goodsIDs []string) error {
 	}()
 
 	if err := tx.Error; err != nil {
-		return err
+		return "", err
 	}
 
 	for _, goodId := range goodsIDs {
@@ -84,14 +84,14 @@ func (pg *Postgres) ReserveGoods(goodsIDs []string) error {
 		).Error
 		if err != nil {
 			tx.Rollback()
-			return err
+			return "", err
 		}
 	}
 
-	return tx.Commit().Error
+	return reserveID, tx.Commit().Error
 }
 
-func (pg *Postgres) ReleaseGoods(goodsIDs []string) error {
+func (pg *Postgres) ReleaseGoods(goodsIDs []int64) error {
 	tx := pg.db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -116,10 +116,10 @@ func (pg *Postgres) ReleaseGoods(goodsIDs []string) error {
 		}
 	}
 
-	return nil
+	return tx.Commit().Error
 }
 
-func (pg *Postgres) GetRemainGoods(warehouseID string) ([]domain.Good, error) {
+func (pg *Postgres) GetRemainGoods(warehouseID int64) ([]domain.Good, error) {
 
 	tx := pg.db.Begin()
 	defer func() {
@@ -129,12 +129,30 @@ func (pg *Postgres) GetRemainGoods(warehouseID string) ([]domain.Good, error) {
 	}()
 
 	if err := tx.Error; err != nil {
-		return err
+		return nil, err
 	}
 
 	var res []Goods
 
-	err := tx.Table("goods").Where("wh_id=?", warehouseID).Find()
+	if err := tx.Table("goods").Where("wh_id=? AND reserve_id IS NULL", warehouseID).Find(&res).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
 
-	return nil, nil
+	if err := tx.Commit().Error; err != nil {
+		return nil, err
+	}
+
+	freeGoods := make([]domain.Good, 0, len(res))
+
+	for _, val := range res {
+		freeGoods = append(freeGoods, domain.Good{
+			ID:       val.ID,
+			Name:     val.Name,
+			Size:     val.Size,
+			Quantity: uint32(val.Qantity),
+		})
+	}
+
+	return freeGoods, nil
 }

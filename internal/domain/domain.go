@@ -1,13 +1,13 @@
 package domain
 
 type Good struct {
-	ID       string
+	ID       int64
 	Name     string
 	Size     string
 	Quantity uint32
 }
 
 type Warehouse struct {
-	Name         string
+	Name         int64
 	Availability bool
 }

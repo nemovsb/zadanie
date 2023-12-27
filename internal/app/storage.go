@@ -3,7 +3,7 @@ package app
 import "zadanie/internal/domain"
 
 type Storage interface {
-	ReserveGoods(goodsIDs []string) error
-	ReleaseGoods(goodsIDs []string) error
-	GetRemainGoods(warehouseID string) ([]domain.Good, error)
+	ReserveGoods(goodsIDs []int64) (string, error)
+	ReleaseGoods(goodsIDs []int64) error
+	GetRemainGoods(warehouseID int64) ([]domain.Good, error)
 }

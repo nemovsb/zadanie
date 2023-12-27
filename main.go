@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"zadanie/docs"
 	"zadanie/internal/app"
 	"zadanie/internal/config"
 	"zadanie/internal/server"
@@ -17,6 +18,8 @@ import (
 
 	"github.com/oklog/run"
 	"go.uber.org/zap"
+
+	_ "zadanie/docs"
 )
 
 var ErrOsSignal = errors.New("got os signal")
@@ -37,6 +40,8 @@ func main() {
 		log.Fatal("zap logger provider: ", err)
 	}
 	defer zapLoggerCleanup()
+
+	docs.SetSwagger()
 
 	//storage := storage_mock.NewStorageMock()
 	storage, err := pg.NewPostgres(pg.NewConfig(

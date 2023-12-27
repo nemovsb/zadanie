@@ -1,0 +1,95 @@
+info:
+  contact: {}
+paths:
+  /goods/release:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "500":
+          description: error
+          schema:
+            type: stirng
+      summary: release goods
+      tags:
+      - goods
+  /goods/reserve:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: reserve_id_example
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "500":
+          description: error
+          schema:
+            type: stirng
+      summary: reserve goods
+      tags:
+      - goods
+  /warehouse/{id}/goods:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - default: 1
+        description: warehouse_id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "500":
+          description: error
+          schema:
+            type: stirng
+      summary: get warehouse's goods
+      tags:
+      - warehouse
+swagger: "2.0"

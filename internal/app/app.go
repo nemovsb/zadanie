@@ -30,22 +30,27 @@ func (a *App) Shutdown(cancel context.CancelFunc) error {
 	return nil
 }
 
-func (a *App) ReserveGoods(goodsIDs []string) error {
-	if err := a.Storage.ReserveGoods(goodsIDs); err != nil {
-		return fmt.Errorf("reserve goods error: %w", err)
+func (a *App) ReserveGoods(goodsIDs []int64) (string, error) {
+	reserveID, err := a.Storage.ReserveGoods(goodsIDs)
+	if err != nil {
+		return "", fmt.Errorf("reserve goods error: %w", err)
 	}
 
-	return nil
+	return reserveID, nil
 }
 
-func (a *App) ReleaseGoods(goodsIDs []string) error {
-	if err := a.Storage.ReserveGoods(goodsIDs); err != nil {
+func (a *App) ReleaseGoods(goodsIDs []int64) error {
+	if err := a.Storage.ReleaseGoods(goodsIDs); err != nil {
 		return fmt.Errorf("release goods error: %w", err)
 	}
 
 	return nil
 }
 
-func (a *App) GetRemainGoods(warehouseID string) ([]domain.Good, error) {
-	return nil, nil
+func (a *App) GetRemainGoods(warehouseID int64) ([]domain.Good, error) {
+	goods, err := a.Storage.GetRemainGoods(warehouseID)
+	if err != nil {
+		return nil, fmt.Errorf("get free goods error: %w", err)
+	}
+	return goods, nil
 }
