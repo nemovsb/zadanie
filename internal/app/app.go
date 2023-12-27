@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"zadanie/internal/domain"
 )
@@ -15,11 +16,17 @@ func NewApp(s Storage) *App {
 	}
 }
 
-func (a *App) Run() error {
-	return nil
+func (a *App) Run(ctx context.Context) error {
+	select {
+	case <-ctx.Done():
+		{
+			return nil
+		}
+	}
 }
 
-func (a *App) Shutdown() error {
+func (a *App) Shutdown(cancel context.CancelFunc) error {
+	cancel()
 	return nil
 }
 

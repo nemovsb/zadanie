@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -28,6 +29,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Read config error: ", err)
 	}
+
+	fmt.Printf("config = %+v\n", config)
 
 	logger, zapLoggerCleanup, err := zaplogger.Provider(mode)
 	if err != nil {
@@ -61,14 +64,16 @@ func main() {
 		interruptionChannel <- syscall.SIGINT
 	})
 
+	appCtx, cancel := context.WithCancel(context.Background())
+
 	serviceGroup.Add(func() error {
 
 		logger.Info("application", zap.String("event", "Application logic started"))
-		return application.Run()
+		return application.Run(appCtx)
 
 	}, func(error) {
 
-		err = application.Shutdown()
+		err = application.Shutdown(cancel)
 		logger.Info("application", zap.String("event", "Application logic shutdown"))
 	})
 
