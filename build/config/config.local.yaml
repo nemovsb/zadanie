@@ -5,4 +5,5 @@ storage:
   host: "postgres"
   port: "5432"
   username: "backend_user"
+  storage_pswrd: "secret_password"
   db_name: "warehouses"

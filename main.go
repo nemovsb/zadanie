@@ -12,7 +12,7 @@ import (
 	"zadanie/internal/config"
 	"zadanie/internal/server"
 	"zadanie/internal/server/router"
-	"zadanie/internal/storage/storage_mock"
+	"zadanie/internal/storage/pg"
 	"zadanie/pkg/zaplogger"
 
 	"github.com/oklog/run"
@@ -38,7 +38,17 @@ func main() {
 	}
 	defer zapLoggerCleanup()
 
-	storage := storage_mock.NewStorageMock()
+	//storage := storage_mock.NewStorageMock()
+	storage, err := pg.NewPostgres(pg.NewConfig(
+		config.Storage.UserName,
+		config.Storage.Host,
+		config.Storage.Port,
+		config.Storage.Password,
+		config.Storage.DBName,
+	))
+	if err != nil {
+		log.Fatal("create storage error:", err)
+	}
 
 	application := app.NewApp(storage)
 
