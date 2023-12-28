@@ -42,7 +42,7 @@ func TestHandler_reserveGoods(t *testing.T) {
 	s := storage_mock.NewStorageMock()
 	a := app.NewApp(s)
 	h := NewHandler(a)
-	r := NewRouter(h, "dev")
+	r := NewRouter(h, "prod")
 
 	for _, testcase := range testSet {
 		w := httptest.NewRecorder()
@@ -66,4 +66,45 @@ func TestHandler_reserveGoods(t *testing.T) {
 		assert.Equal(t, testcase.resReserveID, reserve.ReserveID)
 	}
 
+}
+
+func TestHandler_releaseGoods(t *testing.T) {
+	type testCase struct {
+		in      []byte
+		resCode int
+	}
+
+	testSet := []testCase{
+		{
+			in:      []byte("[1,2]"),
+			resCode: 200,
+		},
+		{
+			in:      []byte("[0]"),
+			resCode: 500,
+		},
+		{
+			in:      []byte("[]"),
+			resCode: 400,
+		},
+		{
+			in:      []byte("{[1,2]}"),
+			resCode: 400,
+		},
+	}
+
+	s := storage_mock.NewStorageMock()
+	a := app.NewApp(s)
+	h := NewHandler(a)
+	r := NewRouter(h, "prod")
+
+	for _, testcase := range testSet {
+		w := httptest.NewRecorder()
+		bodyreader := bytes.NewReader(testcase.in)
+		req, _ := http.NewRequest("POST", "/goods/reserve", bodyreader)
+		r.ServeHTTP(w, req)
+
+		assert.Equal(t, testcase.resCode, w.Code)
+
+	}
 }
