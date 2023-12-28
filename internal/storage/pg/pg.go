@@ -74,17 +74,23 @@ func (pg *Postgres) ReserveGoods(goodsIDs []int64) (string, error) {
 	}
 
 	for _, goodId := range goodsIDs {
-		err := tx.Raw(`
+		query := tx.Exec(`
 		UPDATE goods
-		SET reserve=?
+		SET reserve_id=?
 		WHERE id=?
 		`,
 			reserveID,
 			goodId,
-		).Error
+		)
+		err := query.Error
 		if err != nil {
 			tx.Rollback()
 			return "", err
+		}
+
+		if query.RowsAffected == 0 {
+			tx.Rollback()
+			return "", fmt.Errorf("nothing reserve")
 		}
 	}
 
@@ -103,16 +109,21 @@ func (pg *Postgres) ReleaseGoods(goodsIDs []int64) error {
 		return err
 	}
 	for _, goodId := range goodsIDs {
-		err := tx.Raw(`
-		UPDATE goods
-		SET reserve=NULL
-		WHERE id=?
-		`,
+		query := tx.Exec(`
+			UPDATE goods
+			SET reserve_id=NULL
+			WHERE id=?
+			`,
 			goodId,
-		).Error
+		)
+		err := query.Error
 		if err != nil {
 			tx.Rollback()
 			return err
+		}
+		if query.RowsAffected == 0 {
+			tx.Rollback()
+			return fmt.Errorf("nothing reserve")
 		}
 	}
 
@@ -147,7 +158,7 @@ func (pg *Postgres) GetRemainGoods(warehouseID int64) ([]domain.Good, error) {
 
 	for _, val := range res {
 		freeGoods = append(freeGoods, domain.Good{
-			ID:       val.ID,
+			ID:       int64(val.ID),
 			Name:     val.Name,
 			Size:     val.Size,
 			Quantity: uint32(val.Qantity),

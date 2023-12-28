@@ -12,22 +12,26 @@ $$
 
 GRANT ALL PRIVILEGES ON DATABASE zadanie TO backend_user;
 
-DROP TABLE IF EXISTS goods;
--- CREATE TABLE IF NOT EXISTS goods(
---     id SERIAL NOT NULL,
---     name varchar(100) NOT NULL,
---     size varchar(100) NOT NULL DEFAULT '1x1x1'::character varying,
---     quantity BIGINT NOT NULL,
---     PRIMARY KEY(id)
--- );
-
-
 DROP TABLE IF EXISTS warehouses;
--- CREATE TABLE IF NOT EXISTS warehouses(
---     id SERIAL NOT NULL,
---     status boolean,
---     PRIMARY KEY(id)
--- );
+CREATE TABLE warehouses(
+    id SERIAL NOT NULL,
+    status boolean,
+    PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS goods;
+CREATE TABLE goods(
+    id SERIAL NOT NULL,
+    name varchar(100) NOT NULL,
+    size varchar(100) NOT NULL DEFAULT '1x1x1'::character varying,
+    quantity bigint,
+    wh_id bigint NOT NULL,
+    reserve_id varchar(50),
+    PRIMARY KEY(id),
+    CONSTRAINT fk_goods_warehouses FOREIGN key(wh_id) REFERENCES warehouses(id)
+);
+
+
 
 
 DROP TABLE IF EXISTS stocks;

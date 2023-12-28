@@ -1,18 +1,18 @@
 package pg
 
 type Goods struct {
-	ID          int64      `gorm:"column:id;type:serial;primaryKey:PK1"`
+	ID          uint       `gorm:"column:id;primaryKey:PK1;autoincrement"`
 	Name        string     `gorm:"column:name;type:varchar(100);not null"`
 	Size        string     `gorm:"column:size;type:varchar(100);default:'1x1x1';not null"`
 	Qantity     int64      `gorm:"column:quantity;type:bigint"`
 	Warehouses  Warehouses `gorm:"foreignKey:WarehouseID;refernces:ID"`
-	WarehouseID int64      `gorm:"column:wh_id;type:serial;not null"`
+	WarehouseID uint       `gorm:"column:wh_id;not null"`
 	ReserveID   string     `gorm:"column:reserve_id;type:varchar(50)"`
 }
 
 type Warehouses struct {
-	ID     int64 `gorm:"column:id;type:serial;primaryKey"`
-	Status bool  `gorm:"column:status"`
+	ID     uint `gorm:"column:id;primaryKey;autoincrement"`
+	Status bool `gorm:"column:status"`
 }
 
 // type Stock struct {

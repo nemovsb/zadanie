@@ -3,6 +3,9 @@ package router
 import (
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func NewRouter(h *Handler, mode string) (router *gin.Engine) {
@@ -22,6 +25,8 @@ func NewRouter(h *Handler, mode string) (router *gin.Engine) {
 	router.Use(gin.Recovery())
 
 	pprof.Register(router)
+
+	router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	goods := router.Group("/goods")
 	goods.POST("/reserve", h.reserveGoods)
