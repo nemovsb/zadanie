@@ -168,8 +168,6 @@ func TestHandler_getRemainGoods(t *testing.T) {
 			t.Errorf("cant read response body")
 		}
 
-		fmt.Printf("responseBody = %+v\n", string(responseBody))
-
 		answer := make([]domain.Good, 0, 1)
 
 		goods := struct {
@@ -177,8 +175,6 @@ func TestHandler_getRemainGoods(t *testing.T) {
 		}{Goods: answer}
 
 		json.Unmarshal(responseBody, &goods)
-
-		fmt.Printf("goods = %+v\n", goods)
 
 		if testcase.expectedLen > 0 {
 			assert.Equal(t, testcase.expectedValue[0].ID, goods.Goods[0].ID)
