@@ -50,11 +50,11 @@ func (m *StorageMock) GetRemainGoods(warehouseID int64) ([]domain.Good, error) {
 	}
 
 	if warehouseID == 1 {
-		return []domain.Good{
-			{ID: 1,
-				Name:     "name1",
-				Size:     "1x1x1",
-				Quantity: 10},
+		return []domain.Good{{
+			ID:       1,
+			Name:     "name1",
+			Size:     "1x1x1",
+			Quantity: 10},
 		}, nil
 	}
 
