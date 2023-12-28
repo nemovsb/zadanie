@@ -1,7 +1,7 @@
 OS=$(shell uname -o)
 PROJECTNAME=zadanie
 
-.PHONY: build-for-compose
+.PHONY: build
 
 # build: build for local OS
 build:
