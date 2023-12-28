@@ -77,7 +77,7 @@ func (pg *Postgres) ReserveGoods(goodsIDs []int64) (string, error) {
 		query := tx.Exec(`
 		UPDATE goods
 		SET reserve_id=?
-		WHERE id=?
+		WHERE id=? AND reserve_id IS NULL
 		`,
 			reserveID,
 			goodId,
@@ -112,7 +112,7 @@ func (pg *Postgres) ReleaseGoods(goodsIDs []int64) error {
 		query := tx.Exec(`
 			UPDATE goods
 			SET reserve_id=NULL
-			WHERE id=?
+			WHERE id=? AND reserve_id IS NOT NULL
 			`,
 			goodId,
 		)

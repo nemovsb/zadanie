@@ -19,6 +19,11 @@ CREATE TABLE warehouses(
     PRIMARY KEY(id)
 );
 
+INSERT INTO warehouses (status) VALUES
+    (true),
+    (true),
+    (false);
+
 DROP TABLE IF EXISTS goods;
 CREATE TABLE goods(
     id SERIAL NOT NULL,
@@ -31,27 +36,12 @@ CREATE TABLE goods(
     CONSTRAINT fk_goods_warehouses FOREIGN key(wh_id) REFERENCES warehouses(id)
 );
 
+INSERT INTO goods (name, size, quantity, wh_id) VALUES 
+    ('cap', '5x5x6',40,1),
+    ('kettle', '10x10x10',10, 2),
+    ('mug', '6x6x7', 15, 1),
+    ('ewewew','4x8x8', 5, 1);
 
 
-
-DROP TABLE IF EXISTS stocks;
--- CREATE TABLE IF NOT EXISTS stocks(
---     id SERIAL NOT NULL,
---     goods_id bigint NOT NULL,
---     wh_id bigint NOT NULL,
---     quantity bigint NOT NULL,
---     PRIMARY KEY(id),
---     CONSTRAINT fk_stocks_goods FOREIGN key(goods_id) REFERENCES goods(id),
---     CONSTRAINT fk_stocks_warehouses FOREIGN key(wh_id) REFERENCES warehouses(id)
--- );
-
-DROP TABLE IF EXISTS reserves;
--- CREATE TABLE IF NOT EXISTS reserves(
---     id varchar(50) NOT NULL,
---     stock_id bigint NOT NULL,
---     quantity bigint NOT NULL,
---     PRIMARY KEY(id),
---     CONSTRAINT fk_reserves_stock FOREIGN key(stock_id) REFERENCES stocks(id)
--- );
 
 

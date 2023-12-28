@@ -1,3 +1,15 @@
+definitions:
+  domain.Good:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      quantity:
+        type: integer
+      size:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -78,9 +90,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: ok
+          description: '{"goods":[{"id":3,"name":"mug","size":"6x6x7","quantity":15}]}'
           schema:
-            type: string
+            additionalProperties:
+              $ref: '#/definitions/domain.Good'
+            type: object
         "400":
           description: error
           schema:

@@ -135,9 +135,12 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok",
+                        "description": "{\"goods\":[{\"id\":3,\"name\":\"mug\",\"size\":\"6x6x7\",\"quantity\":15}]}",
                         "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "additionalProperties": {
+                                "$ref": "#/definitions/domain.Good"
+                            }
                         }
                     },
                     "400": {
@@ -152,6 +155,25 @@ const docTemplate = `{
                             "type": "stirng"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.Good": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "string"
                 }
             }
         }
