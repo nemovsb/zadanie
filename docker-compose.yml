@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  zadanie:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    restart: always
+    links:
+      - postgres
+    ports:
+      - "8088:8088"
+    environment:
+      - MYAPP_MODE=dev
+    volumes:
+      - ./build/config/:/zadanie/config/
+
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "warehouses"
+      POSTGRES_USER: "backend_user"
+      POSTGRES_PASSWORD: "secret_password"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./build/compose/pg/init:/docker-entrypoint-initdb.d
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
