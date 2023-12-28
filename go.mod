@@ -1,6 +1,6 @@
 module zadanie
 
-go 1.21.5
+go 1.21
 
 require github.com/spf13/viper v1.18.2
 
