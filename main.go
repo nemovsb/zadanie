@@ -18,8 +18,6 @@ import (
 
 	"github.com/oklog/run"
 	"go.uber.org/zap"
-
-	_ "zadanie/docs"
 )
 
 var ErrOsSignal = errors.New("got os signal")
@@ -55,7 +53,7 @@ func main() {
 		log.Fatal("create storage error:", err)
 	}
 
-	application := app.NewApp(storage)
+	application := app.NewApp(storage, logger)
 
 	handler := router.NewHandler(application)
 	router := router.NewRouter(handler, mode)

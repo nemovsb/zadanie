@@ -13,6 +13,7 @@ import (
 	"zadanie/internal/storage/storage_mock"
 
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
 
 func TestHandler_reserveGoods(t *testing.T) {
@@ -42,7 +43,7 @@ func TestHandler_reserveGoods(t *testing.T) {
 	}
 
 	s := storage_mock.NewStorageMock()
-	a := app.NewApp(s)
+	a := app.NewApp(s, zap.NewNop())
 	h := NewHandler(a)
 	r := NewRouter(h, "prod")
 
@@ -96,7 +97,7 @@ func TestHandler_releaseGoods(t *testing.T) {
 	}
 
 	s := storage_mock.NewStorageMock()
-	a := app.NewApp(s)
+	a := app.NewApp(s, zap.NewNop())
 	h := NewHandler(a)
 	r := NewRouter(h, "prod")
 
@@ -149,7 +150,7 @@ func TestHandler_getRemainGoods(t *testing.T) {
 	}
 
 	s := storage_mock.NewStorageMock()
-	a := app.NewApp(s)
+	a := app.NewApp(s, zap.NewNop())
 	h := NewHandler(a)
 	r := NewRouter(h, "prod")
 
